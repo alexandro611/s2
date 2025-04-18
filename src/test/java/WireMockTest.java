@@ -6,7 +6,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 public class WireMockTest {
     private static WireMockServer wireMockServer;
-    private static String[] cityList = {"Москва","Лондон","Нью-Йорк","Париж"};
+    private static String[] cityList = {"Москва","Лондон","Нью-Йорк","Париж"}; //заменить на мапу с разными температурами
 
     @BeforeAll
     static void setup() {
