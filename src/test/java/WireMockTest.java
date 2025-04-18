@@ -44,7 +44,7 @@ public class WireMockTest {
 
         stubFor(get(urlPathEqualTo("/api/weather"))
                 .withQueryParam("appId", equalTo("testKey"))
-                .withQueryParam("q", matching(".*"))
+                .withQueryParam("q", notContaining(cityList.toString()))
                 .withQueryParam("units", notContaining("metric"))
                 .willReturn(aResponse()
                         .withStatus(404)
