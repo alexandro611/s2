@@ -15,7 +15,7 @@ public class WireMockTest {
         wireMockServer.start();
         WireMock.configureFor("localhost", 8089);
 
-        stubFor(get(urlPathEqualTo("/search"))
+        stubFor(get(urlPathEqualTo("/api/weather"))
                 .withQueryParam("appId", equalTo("testKey"))
                 .withQueryParam("q", matching(".*"))
                 .withQueryParam("units", equalTo("metric"))
@@ -23,11 +23,32 @@ public class WireMockTest {
                         .withStatus(200)
                         .withBody("{\"main\": [\"temp\": \"10\"}"))); //для всех городов 10 градусов
 
-        stubFor(get(urlPathEqualTo("/api/admin"))
+        stubFor(get(urlPathEqualTo("/api/weather"))
                 .withQueryParam("appId", absent())
                 .willReturn(aResponse()
                         .withStatus(401)
                         .withBody("{\"message\": \"Unauthorized\"}")));
+
+        stubFor(get(urlPathEqualTo("/api/weather"))
+                .withQueryParam("appId", noValues())
+                .willReturn(aResponse()
+                        .withStatus(401)
+                        .withBody("{\"message\": \"Unauthorized\"}")));
+
+        stubFor(get(urlPathEqualTo("/api/weather"))
+                .withQueryParam("appId", equalTo("testKey"))
+                .withQueryParam("q", noValues())
+                .willReturn(aResponse()
+                        .withStatus(404)
+                        .withBody("{\"message\": \"city is necessary\"}")));
+
+        stubFor(get(urlPathEqualTo("/api/weather"))
+                .withQueryParam("appId", equalTo("testKey"))
+                .withQueryParam("q", matching(".*"))
+                .withQueryParam("units", notContaining("metric"))
+                .willReturn(aResponse()
+                        .withStatus(404)
+                        .withBody("{\"message\": \"units is not valid\"}")));
     }
 
     @AfterAll

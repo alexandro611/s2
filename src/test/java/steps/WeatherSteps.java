@@ -102,7 +102,7 @@ public class WeatherSteps {
     @Then("Я получаю сообщение об 404 ошибке город не задан")
     public void verifyErrorCity() {
         assertEquals(404, response.getStatusCode());
-        assertEquals("q is necessary", response.jsonPath().get("message"));
+        assertEquals("city is necessary", response.jsonPath().get("message"));
 
     }
 
