@@ -5,14 +5,10 @@ import io.cucumber.java.*;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
-import io.cucumber.java.ru.Дано;
-import io.cucumber.java.ru.И;
-import io.cucumber.java.ru.Когда;
-import io.cucumber.java.ru.То;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -40,11 +36,11 @@ public class WeatherSteps {
         this.cityName = city;
         response = given()
                 .queryParam("q", city)
-                .queryParam("appid", "ваш_api_ключ") // Замените на реальный ключ
+                .queryParam("appid", "testKey")
                 .queryParam("units", "metric")
                 .queryParam("lang", "ru")
                 .when()
-                .get("/data/2.5/weather");
+                .get("/api/weather");
     }
 
     @Given("Я запрашиваю погоду для города {string} в неизвестных единицах измерения")
@@ -52,22 +48,22 @@ public class WeatherSteps {
         this.cityName = city;
         response = given()
                 .queryParam("q", city)
-                .queryParam("appid", "ваш_api_ключ") // Замените на реальный ключ
+                .queryParam("appid", "testKey")
                 .queryParam("units", "not_valid_metric")
                 .queryParam("lang", "ru")
                 .when()
-                .get("/data/2.5/weather");
+                .get("/api/weather");
     }
 
     @Given("Я запрашиваю погоду без указания города")
     public void requestWeatherForCityWithotCity(String city) {
         this.cityName = city;
         response = given()
-                .queryParam("appid", "ваш_api_ключ") // Замените на реальный ключ
+                .queryParam("appid", "testKey")
                 .queryParam("units", "metric")
                 .queryParam("lang", "ru")
                 .when()
-                .get("/data/2.5/weather");
+                .get("/api/weather");
     }
 
     @Given("Я запрашиваю погоду для города {string}")
@@ -75,11 +71,11 @@ public class WeatherSteps {
         this.cityName = city;
         response = given()
                 .queryParam("q", city)
-                .queryParam("appid", "ваш_api_ключ") // Замените на реальный ключ
+                .queryParam("appid", "testKey")
                 .queryParam("units", "metric")
                 .queryParam("lang", "ru")
                 .when()
-                .get("/data/2.5/weather");
+                .get("/api/weather");
     }
 
     @Then("Я получаю корректные данные о погоде")
@@ -94,6 +90,7 @@ public class WeatherSteps {
     public void verifyTemperatureInCelsius() {
         String temperature = response.jsonPath().get("main.temp").toString();
         assertTrue(temperature.matches("-?\\d+(\\.\\d+)?"));
+        assertEquals("10", response.jsonPath().get("main.temp"));
     }
 
     @Then("Я получаю сообщение об 404 ошибке город не указан")
@@ -116,7 +113,7 @@ public class WeatherSteps {
 
     }
 
-    @Then("Я получаю сообщение об 404 ошибке город не задан")
+    @Then("Я получаю сообщение об 401 ошибке город не задан")
     public void verifyErrorAuth() {
         assertEquals(401, response.getStatusCode());
 
