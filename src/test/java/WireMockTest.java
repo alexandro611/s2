@@ -6,6 +6,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 public class WireMockTest {
     private static WireMockServer wireMockServer;
+    private static String[] cityList = {"Москва","Лондон","Нью-Йорк","Париж"};
 
     @BeforeAll
     static void setup() {
@@ -13,9 +14,10 @@ public class WireMockTest {
         wireMockServer.start();
         WireMock.configureFor("localhost", 8089);
 
+
         stubFor(get(urlPathEqualTo("/api/weather"))
                 .withQueryParam("appId", equalTo("testKey"))
-                .withQueryParam("q", matching(".*"))
+                .withQueryParam("q", equalTo(cityList.toString()))
                 .withQueryParam("units", equalTo("metric"))
                 .willReturn(aResponse()
                         .withStatus(200)
