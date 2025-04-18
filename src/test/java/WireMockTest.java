@@ -37,7 +37,7 @@ public class WireMockTest {
 
         stubFor(get(urlPathEqualTo("/api/weather"))
                 .withQueryParam("appId", equalTo("testKey"))
-                .withQueryParam("q", noValues())
+                .withQueryParam("q", notContaining(cityList.toString()))
                 .willReturn(aResponse()
                         .withStatus(404)
                         .withBody("{\"message\": \"city is necessary\"}")));
